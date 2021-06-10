@@ -1,0 +1,9 @@
+Metodologia;112;6;Actuario
+Metodologia;112;6;Administración
+Metodologia;112;6;Sistemas de Información
+Actuacion Profesional;220;4;Economía
+Sistema de datos;191;6;Economía
+Gestion de Recursos Informaticos;363;4;Contador Público
+Comercio Electronico;520;4;Actuario
+Redes Informaticas;657;4;Economía
+Construccion de aplicaciones informaticas;652;4;Sistemas de Información
