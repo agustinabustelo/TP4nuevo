@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Linq;
+using static System.Text.Json.JsonSerializer;
+
+
 
 namespace Solicitud_Inscripcion
 {
@@ -27,7 +31,7 @@ namespace Solicitud_Inscripcion
             int ContadorMateriasAgregadas = 0;
             int ContadorMateriasAprobadas = 0;
 
-            List<int> HistorialAlumnos = new List<int>();
+            Dictionary<int, int> HistorialAlumnos = new Dictionary<int, int>();
 
             string ContinuarAgregando;
 
@@ -109,13 +113,13 @@ namespace Solicitud_Inscripcion
                         
                         Console.WriteLine("Ingresar el codigo de una materia que ya aprobaste: ");
                         MateriasAprobadas = Console.ReadLine();
-                        Console.WriteLine(MateriasAprobadas);
                         flagValidaciones = Materia.ValidarCodigoMateria(MateriasAprobadas);
 
                         if (flagValidaciones == true)
                         {
                             CodigoMateriaValidado = Convert.ToInt32(MateriasAprobadas);
-                            HistorialAlumnos.Add(CodigoMateriaValidado);
+                            HistorialAlumnos.Add(CodigoMateriaValidado, Convert.ToInt32(NroRegistro));
+                            Console.WriteLine(Serialize(HistorialAlumnos.ToList()));
 
                             //Se valida que el código ingresado exista en la lista de materias.
                             if (Materia.ValidarCodigoMateriaenLista(CodigoMateriaValidado) == true)
@@ -139,7 +143,8 @@ namespace Solicitud_Inscripcion
                                         if (flagValidaciones == true)
                                         {
                                             MateriasAprobadas2Validadas = Convert.ToInt32(MateriasAprobadas2);
-                                            HistorialAlumnos.Add(MateriasAprobadas2Validadas);
+                                            HistorialAlumnos.Add(MateriasAprobadas2Validadas, Convert.ToInt32(NroRegistro));
+                                            Console.WriteLine(Serialize(HistorialAlumnos.ToList()));
 
                                             if (Materia.ValidarCodigoMateriaenLista(MateriasAprobadas2Validadas))
                                             {
@@ -158,6 +163,27 @@ namespace Solicitud_Inscripcion
                                                         {
                                                             Console.WriteLine("Desea agregar otra materia aprobada? (S/N)");
                                                             ContinuarAgregando = Console.ReadLine();
+
+                                                            string Path = @"/Users/agustinabustelo/Downloads/Entrega-TP4-Grupo-J-main/bin/Debug/MateriasAprobadas.txt";
+                                                            FileInfo FI = new FileInfo(Path);
+
+                                                            //StreamWriter SW = new StreamWriter(Path);
+
+                                                            StreamWriter SW;
+
+                                                            SW = File.AppendText(Path);
+
+
+
+                                                            foreach (KeyValuePair<int, int> H in HistorialAlumnos)
+                                                            {
+
+                                                                SW.WriteLine(H);
+                                                            }
+
+                                                            SW.Close();
+
+                                                            Console.WriteLine("Se ha guardado correctamente el archivo en la ruta: " + Path);
 
                                                         } while (ContinuarAgregando.ToLower() != "s" && ContinuarAgregando.ToLower() != "n");
                                                     }
@@ -203,7 +229,7 @@ namespace Solicitud_Inscripcion
 
 
                     //Se valida que no se haya aprobado aún
-                    if (HistorialAlumnos.Contains(CodigoMateriaValidado))
+                    if (HistorialAlumnos.ContainsValue(CodigoMateriaValidado))
                     {
                         Console.WriteLine("Esa materia ya fue aprobada. Elija otra.");
                         flagValidaciones = false;
@@ -224,7 +250,7 @@ namespace Solicitud_Inscripcion
 
                         do
                         {
-
+ 
                             //lista preguntando que materias aprobo. si selecciona alguna se abre el txt materias aprobadas y se escriben las materias q aprobo (S/N). si pones q si que aparezca el listado de todas las materias cargadas. copiar el codigo de cuando te inscribis a la materia
                             //hacer otro txt llamado MateriasAprobadasPorAlumno que guarde el NroRegistro del alumno con el o los codigos de las materias que aprobo
 
@@ -243,6 +269,22 @@ namespace Solicitud_Inscripcion
                                 {
                                     do
                                     {
+                                        try
+                                        {
+                                            // Open the text file using a stream reader.
+                                            string Path = @"/Users/agustinabustelo/Downloads/Entrega-TP4-Grupo-J-main/bin/Debug/MateriasAprobadas.txt";
+                                            using (var sr = new StreamReader(Path))
+                                            {
+                                                // Read the stream as a string, and write the string to the console.
+                                                Console.WriteLine(sr.ReadToEnd());
+                                            }
+                                        }
+                                        catch (IOException e)
+                                        {
+                                            Console.WriteLine("El archivo no pudo ser leido:");
+                                            Console.WriteLine(e.Message);
+                                        }
+
                                         Console.WriteLine("Desea agregar un curso alternativo? (S/N)");
                                         CursoAlt = Console.ReadLine();
 
@@ -263,6 +305,22 @@ namespace Solicitud_Inscripcion
 
                                                 if (Curso.ValidarCodigoCursoEnLista(CodigoCursoAltValidado))
                                                 {
+                                                    try
+                                                    {
+                                                        // Open the text file using a stream reader.
+                                                        string Path = @"/Users/agustinabustelo/Downloads/Entrega-TP4-Grupo-J-main/bin/Debug/MateriasAprobadas.txt";
+                                                        using (var sr = new StreamReader(Path))
+                                                        {
+                                                            // Read the stream as a string, and write the string to the console.
+                                                            Console.WriteLine(sr.ReadToEnd());
+                                                        }
+                                                    }
+                                                    catch (IOException e)
+                                                    {
+                                                        Console.WriteLine("El archivo no pudo ser leido:");
+                                                        Console.WriteLine(e.Message);
+                                                    }
+
                                                     if (CodigoCursoAltValidado == CodigoCursoValidado)
                                                     {
                                                         Console.WriteLine("No puede ingresar el mismo código que el curso principal");
@@ -361,6 +419,8 @@ namespace Solicitud_Inscripcion
             Solicitud_Inscripcion.GuardarSolicitud();
 
         }
+
+        
 
     } 
 }

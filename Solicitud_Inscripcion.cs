@@ -61,6 +61,8 @@ namespace Solicitud_Inscripcion
             string Path = @"/Users/agustinabustelo/Downloads/Entrega-TP4-Grupo-J-main/bin/Debug/Solicitud_Inscripcion.txt";
             FileInfo FI = new FileInfo(Path);
 
+
+
             //StreamWriter SW = new StreamWriter(Path);
 
             StreamWriter SW;
