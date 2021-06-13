@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/agustinabustelo/Downloads/Entrega-TP4-Grupo-J-main/Solicitud_Inscripcion.csproj": {}
+    "/Users/agustinabustelo/Downloads/ivannafigueroa-ivannafigueroa-TP4-actualizado-con-correcciones-main/TP4nuevo-master/Solicitud_Inscripcion.csproj": {}
   },
   "projects": {
-    "/Users/agustinabustelo/Downloads/Entrega-TP4-Grupo-J-main/Solicitud_Inscripcion.csproj": {
+    "/Users/agustinabustelo/Downloads/ivannafigueroa-ivannafigueroa-TP4-actualizado-con-correcciones-main/TP4nuevo-master/Solicitud_Inscripcion.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/agustinabustelo/Downloads/Entrega-TP4-Grupo-J-main/Solicitud_Inscripcion.csproj",
+        "projectUniqueName": "/Users/agustinabustelo/Downloads/ivannafigueroa-ivannafigueroa-TP4-actualizado-con-correcciones-main/TP4nuevo-master/Solicitud_Inscripcion.csproj",
         "projectName": "Solicitud_Inscripcion",
-        "projectPath": "/Users/agustinabustelo/Downloads/Entrega-TP4-Grupo-J-main/Solicitud_Inscripcion.csproj",
+        "projectPath": "/Users/agustinabustelo/Downloads/ivannafigueroa-ivannafigueroa-TP4-actualizado-con-correcciones-main/TP4nuevo-master/Solicitud_Inscripcion.csproj",
         "packagesPath": "/Users/agustinabustelo/.nuget/packages/",
-        "outputPath": "/Users/agustinabustelo/Downloads/Entrega-TP4-Grupo-J-main/obj/",
+        "outputPath": "/Users/agustinabustelo/Downloads/ivannafigueroa-ivannafigueroa-TP4-actualizado-con-correcciones-main/TP4nuevo-master/obj/",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"

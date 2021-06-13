@@ -51,14 +51,14 @@ namespace Solicitud_Inscripcion
 
         public string Formato()
         {
-            return string.Format("Registro: {0}- Carrera: {1}- Código materia: {2}- Código Curso: {3}- Código curso Alternativo: {4}", NroRegistro, Carrera,codigoMateria, codigoCurso,codigoCursoAlt);
+            return string.Format("{0};{1};{2};{3};{4}", NroRegistro, Carrera,codigoMateria, codigoCurso,codigoCursoAlt);
 
         }
 
 
         public static void GuardarSolicitud()
         {
-            string Path = @"/Users/agustinabustelo/Downloads/Entrega-TP4-Grupo-J-main/bin/Debug/Solicitud_Inscripcion.txt";
+            string Path = @"/Users/agustinabustelo/Downloads/ivannafigueroa-ivannafigueroa-TP4-actualizado-con-correcciones-main/TP4nuevo-master/bin/Debug/Solicitud_Inscripcion.txt";
             FileInfo FI = new FileInfo(Path);
 
 
@@ -80,6 +80,65 @@ namespace Solicitud_Inscripcion
             SW.Close();
 
             Console.WriteLine("Se ha guardado correctamente el archivo en la ruta: " + Path);
+        }
+
+        public static void CargarSolicitudes()
+        {
+
+            string Path = @"/Users/agustinabustelo/Downloads/ivannafigueroa-ivannafigueroa-TP4-actualizado-con-correcciones-main/TP4nuevo-master/bin/Debug/Solicitud_Inscripcion.txt";
+            FileInfo FI = new FileInfo(Path);
+
+
+            if (!FI.Exists)
+            {
+                Console.WriteLine("No existe el archivo de la ruta: " + Path + ". Por favor, comprobar que sea la ruta correcta.");
+            }
+            else
+            {
+
+                StreamReader sr = FI.OpenText();
+
+                while (!sr.EndOfStream)
+                {
+
+                    string p = sr.ReadLine();
+
+                    string[] vector = p.Split(';');
+
+
+
+
+                    Solicitud_Inscripcion SolicitudInscripcion = new Solicitud_Inscripcion();
+
+                    SolicitudInscripcion.NroRegistro = Convert.ToInt32(vector[0]);
+
+                    ListaCursosConfirmados.Add(SolicitudInscripcion);
+
+                }
+                sr.Close();
+            }
+
+
+        }
+
+        public static bool ValidarNroRegEnSolicitudes(int Registro)
+        {
+            bool flagADevolver;
+
+            //Si se encuentra el registro del alumno entre las solicitudes ya generadas, se lo considera no habilitado para inscribirse y se devuelve el flag en false.
+
+            if (ListaCursosConfirmados.Find(R => R.NroRegistro == Registro) == null)
+            {
+                flagADevolver = true;
+            }
+            else
+            {
+                Console.WriteLine("El número de registro " + Registro + " ya se generó una solicitud de inscripción. No puede inscribirse nuevamente.");
+                flagADevolver = false;
+            }
+
+            return flagADevolver;
+
         }
 
     }

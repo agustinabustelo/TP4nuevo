@@ -65,7 +65,7 @@ namespace Solicitud_Inscripcion
         public static void CargarAlumnos()
         {
 
-            string Path = @"/Users/agustinabustelo/Downloads/Entrega-TP4-Grupo-J-main/bin/Debug/AlumnosRegulares.txt";
+            string Path = @"/Users/agustinabustelo/Downloads/ivannafigueroa-ivannafigueroa-TP4-actualizado-con-correcciones-main/TP4nuevo-master/bin/Debug/AlumnosRegulares.txt";
             FileInfo FI = new FileInfo(Path);
 
 

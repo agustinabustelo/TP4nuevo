@@ -34,12 +34,14 @@ namespace Solicitud_Inscripcion
             Dictionary<int, int> HistorialAlumnos = new Dictionary<int, int>();
 
             string ContinuarAgregando;
+            string UltimasCuatro;
 
 
             //Cargamos las listas de carreras, materias y alumnos en el programa (mediante .txt)
             Carrera.CargarCarreras();
             Materia.CargarMaterias();
             AlumnoRegular.CargarAlumnos();
+            Solicitud_Inscripcion.CargarSolicitudes();
 
 
             //Solicitamos el ingreso del número de registro para validar el alumno. Se pedirá hasta que se ingrese un número válido (flagValidaciones = true).
@@ -56,7 +58,15 @@ namespace Solicitud_Inscripcion
                     //Luego validamos que se encuentre entre los alumnos regulares habilitados
                     if (AlumnoRegular.ValidarNroRegEnLista(Convert.ToInt32(NroRegistro)))
                     {
-                        flagValidaciones = true;
+                        //Luego validamos que se el alumno no haya generado una solicitud previamente
+                        if (Solicitud_Inscripcion.ValidarNroRegEnSolicitudes(Convert.ToInt32(NroRegistro)))
+                        {
+                            flagValidaciones = true;
+                        }
+                        else
+                        {
+                            flagValidaciones = false;
+                        }
                     }
                     else
                     {
@@ -74,9 +84,9 @@ namespace Solicitud_Inscripcion
             do
             {
                 Console.WriteLine("Se encuentra cursando las últimas 4 materias de la carrera? (S/N)");
-                ContinuarAgregando = Console.ReadLine();
+                UltimasCuatro = Console.ReadLine();
 
-            } while (ContinuarAgregando.ToLower() != "s" && ContinuarAgregando.ToLower() != "n");
+            } while (UltimasCuatro.ToLower() != "s" && UltimasCuatro.ToLower() != "n");
 
             //Se empiezan a solicitar los ingresos para la inscripción a cursos
             do
@@ -164,7 +174,7 @@ namespace Solicitud_Inscripcion
                                                             Console.WriteLine("Desea agregar otra materia aprobada? (S/N)");
                                                             ContinuarAgregando = Console.ReadLine();
 
-                                                            string Path = @"/Users/agustinabustelo/Downloads/Entrega-TP4-Grupo-J-main/bin/Debug/MateriasAprobadas.txt";
+                                                            string Path = @"/Users/agustinabustelo/Downloads/ivannafigueroa-ivannafigueroa-TP4-actualizado-con-correcciones-main/TP4nuevo-master/bin/Debug/MateriasAprobadas.txt";
                                                             FileInfo FI = new FileInfo(Path);
 
                                                             //StreamWriter SW = new StreamWriter(Path);
@@ -202,12 +212,7 @@ namespace Solicitud_Inscripcion
                                 }
                             }
                         }
-                    }
-                }
-                
-
-
-
+                    
                 //Se pide al usuario que ingrese el código de la materia en la que se inscribirá y se valida el ingreso.
                 Console.WriteLine("Ingresar el código de la materia a la que desea inscribirse: ");
                 CodigoMateriaIngresado = Console.ReadLine();
@@ -229,7 +234,7 @@ namespace Solicitud_Inscripcion
 
 
                     //Se valida que no se haya aprobado aún
-                    if (HistorialAlumnos.ContainsValue(CodigoMateriaValidado))
+                    if (HistorialAlumnos.ContainsKey(CodigoMateriaValidado))
                     {
                         Console.WriteLine("Esa materia ya fue aprobada. Elija otra.");
                         flagValidaciones = false;
@@ -239,9 +244,43 @@ namespace Solicitud_Inscripcion
                     //Se valida que el código ingresado exista en la lista de materias.
                     if (Materia.ValidarCodigoMateriaenLista(CodigoMateriaValidado) == true)
                     {
+                                //Se valida si tiene las correlativas necesarias
 
-                        //Una vez validada la materia, se muestran en pantalla los cursos disponibles para la misma.
-                        Console.WriteLine($"Presione [ENTER] para ver los cursos disponibles de la materia {CodigoMateriaValidado}");
+                                string PathCorrelativas = @"/Users/agustinabustelo/Downloads/ivannafigueroa-ivannafigueroa-TP4-actualizado-con-correcciones-main/TP4nuevo-master/bin/Debug/MateriasCorrelativas.txt";
+
+                                using (StreamReader sr = new StreamReader(PathCorrelativas))
+                                {
+                                    String line;
+
+                                    while ((line = sr.ReadLine()) != null)
+                                    {
+                                        string[] correlativas = line.Split(";");
+                                        if (correlativas[1] == CodigoMateriaValidado.ToString())
+                                        {
+                                            for (int i = 2; i < correlativas.Length; i++)
+                                            {
+                                                if (correlativas[i] != "0")
+                                                {
+                                                    bool _existe = HistorialAlumnos.ContainsKey(Convert.ToInt32(correlativas[i]));
+                                                    if (_existe == false)
+                                                    {
+                                                        Console.WriteLine("No tiene la correlativa "+ correlativas[i]+ " necesaria para cursar esa materia. Elija otra.");
+                                                        flagValidaciones = false;
+                                                        continue;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                if (flagValidaciones == false)
+                                {
+                                    continue;
+                                }
+
+                                //Una vez validada la materia, se muestran en pantalla los cursos disponibles para la misma.
+                                Console.WriteLine($"Presione [ENTER] para ver los cursos disponibles de la materia {CodigoMateriaValidado}");
                         Console.ReadKey();
 
                         //Cargo en la lista de cursos solo los que correspondan a la materia ingresada y los muestro al usuario.
@@ -250,10 +289,6 @@ namespace Solicitud_Inscripcion
 
                         do
                         {
- 
-                            //lista preguntando que materias aprobo. si selecciona alguna se abre el txt materias aprobadas y se escriben las materias q aprobo (S/N). si pones q si que aparezca el listado de todas las materias cargadas. copiar el codigo de cuando te inscribis a la materia
-                            //hacer otro txt llamado MateriasAprobadasPorAlumno que guarde el NroRegistro del alumno con el o los codigos de las materias que aprobo
-
                             //Se pide al usuario que ingrese el código del curso en el que se inscribirá y se valida el ingreso.
                             Console.WriteLine("Ingresar el código del curso al que desea inscribirse: ");
                             CodigoCursoIngresado = Console.ReadLine();
@@ -272,7 +307,7 @@ namespace Solicitud_Inscripcion
                                         try
                                         {
                                             // Open the text file using a stream reader.
-                                            string Path = @"/Users/agustinabustelo/Downloads/Entrega-TP4-Grupo-J-main/bin/Debug/MateriasAprobadas.txt";
+                                            string Path = @"/Users/ivfigueroa/Downloads/TP4nuevo-master/bin/Debug/MateriasAprobadas.txt";
                                             using (var sr = new StreamReader(Path))
                                             {
                                                 // Read the stream as a string, and write the string to the console.
@@ -308,11 +343,12 @@ namespace Solicitud_Inscripcion
                                                     try
                                                     {
                                                         // Open the text file using a stream reader.
-                                                        string Path = @"/Users/agustinabustelo/Downloads/Entrega-TP4-Grupo-J-main/bin/Debug/MateriasAprobadas.txt";
+                                                        string Path = @"/Users/agustinabustelo/Downloads/ivannafigueroa-ivannafigueroa-TP4-actualizado-con-correcciones-main/TP4nuevo-master/bin/Debug/MateriasAprobadas.txt";
                                                         using (var sr = new StreamReader(Path))
                                                         {
-                                                            // Read the stream as a string, and write the string to the console.
-                                                            Console.WriteLine(sr.ReadToEnd());
+                                                                // Read the stream as a string, and write the string to the console.
+                                                                Console.WriteLine("Sus materias aprobadas son:");
+                                                                Console.WriteLine(sr.ReadToEnd());
                                                         }
                                                     }
                                                     catch (IOException e)
@@ -341,7 +377,16 @@ namespace Solicitud_Inscripcion
                                                         ContadorMateriasAgregadas++;
 
                                                         //Preguntara al usuario si desea agregar otra materia, siempre que no haya agregado 3.
-                                                        if (ContadorMateriasAgregadas < 3)
+                                                        if (ContadorMateriasAgregadas < 4 && UltimasCuatro.ToLower() == "s")
+                                                        {
+                                                            do
+                                                            {
+                                                                Console.WriteLine("Desea agregar otra materia a la solicitud? (S/N)");
+                                                                ContinuarAgregando = Console.ReadLine();
+
+                                                            } while (ContinuarAgregando.ToLower() != "s" && ContinuarAgregando.ToLower() != "n");
+                                                        }
+                                                        else if (ContadorMateriasAgregadas < 3 && UltimasCuatro.ToLower() == "n")
                                                         {
                                                             do
                                                             {
@@ -374,7 +419,16 @@ namespace Solicitud_Inscripcion
                                         ContadorMateriasAgregadas++;
 
                                         //Preguntara al usuario si desea agregar otra materia, siempre que no haya agregado 3.
-                                        if (ContadorMateriasAgregadas < 3)
+                                        if (ContadorMateriasAgregadas < 4 && UltimasCuatro.ToLower() == "s")
+                                        {
+                                            do
+                                            {
+                                                Console.WriteLine("Desea agregar otra materia a la solicitud? (S/N)");
+                                                ContinuarAgregando = Console.ReadLine();
+
+                                            } while (ContinuarAgregando.ToLower() != "s" && ContinuarAgregando.ToLower() != "n");
+                                        }
+                                        else if (ContadorMateriasAgregadas < 3 && UltimasCuatro.ToLower() == "n")
                                         {
                                             do
                                             {
@@ -403,9 +457,10 @@ namespace Solicitud_Inscripcion
                     {
                         FlagGeneral = false;
                     }
+                        }
+                    }
+
                 }
-
-
 
 
 

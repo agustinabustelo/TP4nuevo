@@ -76,7 +76,7 @@ namespace Solicitud_Inscripcion
         public static void CargarCursosCorrespondientesAMateria(int CodigoMateria)
         {
 
-            string Path = @"/Users/agustinabustelo/Downloads/Entrega-TP4-Grupo-J-main/bin/Debug/Cursos.txt";
+            string Path = @"/Users/agustinabustelo/Downloads/ivannafigueroa-ivannafigueroa-TP4-actualizado-con-correcciones-main/TP4nuevo-master/bin/Debug/Cursos.txt";
             FileInfo FI = new FileInfo(Path);
 
             if (!FI.Exists)

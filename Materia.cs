@@ -30,7 +30,7 @@ namespace Solicitud_Inscripcion
         public static void CargarMaterias()
         {
 
-            string Path = @"/Users/agustinabustelo/Downloads/Entrega-TP4-Grupo-J-main/bin/Debug/MateriasPorCarrera.txt";
+            string Path = @"/Users/agustinabustelo/Downloads/ivannafigueroa-ivannafigueroa-TP4-actualizado-con-correcciones-main/TP4nuevo-master/bin/Debug/MateriasPorCarrera.txt";
             FileInfo FI = new FileInfo(Path);
 
 
